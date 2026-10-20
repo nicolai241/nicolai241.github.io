@@ -97,14 +97,15 @@
 
 <script>
     (function(){
+        var editing=false;
         var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var store = {}; try{store=JSON.parse(localStorage.getItem('profile2')||'{}')}catch(e){}
-        function save(){try{localStorage.setItem('profile2',JSON.stringify(store))}catch(e){}}
+        var store = {}; try{store=JSON.parse(localStorage.getItem('profile3')||'{}')}catch(e){}
+        function save(){try{localStorage.setItem('profile3',JSON.stringify(store))}catch(e){}}
 
         // PUT YOUR PHOTOS HERE: change the file names to match your pictures.
         // Delete a line if you don't have that photo (the box stays as an upload slot).
         var PHOTOS = {
-            portrait: 'photos/trymo.jpeg',     // big picture at the top
+            portrait: 'photos/trymo.jpeg',  // big picture at the top
             photo1:   'photos/photo1.jpeg', // gallery photos
             photo2:   'photos/photo2.jpg',
             photo3:   'photos/photo3.jpg',
@@ -118,9 +119,9 @@
         for(var i=1;i<=6;i++){var d=document.createElement('div');d.className='slot';d.dataset.photo='photo'+i;d.innerHTML='Add photo '+i+'<input type="file" accept="image/*" aria-label="Add photo '+i+'">';gal.appendChild(d)}
 
         // Name: letters react to pointer
-        var nameEl=$('#name'), letters=[];
+        var nameEl=$('#name'), letters=[], defaultName=nameEl.textContent.trim()||'Your Name';
         function renderName(){
-            var t=store.name||'Your Name'; nameEl.textContent=''; letters=[];
+            var t=store.name||defaultName; nameEl.textContent=''; letters=[];
             nameEl.setAttribute('aria-label',t);
             t.split('').forEach(function(c){var s=document.createElement('span');s.className='l';s.setAttribute('aria-hidden','true');s.textContent=c;nameEl.appendChild(s);letters.push(s)});
         }
@@ -183,10 +184,11 @@
         tb.onclick=function(){root.setAttribute('data-theme',dark()?'light':'dark');labelTheme()};labelTheme();
 
         // Edit mode
-        var editing=false,btn=$('#toggle');
-        function setEditing(on){editing=on;document.body.classList.toggle('editing',on);
+        var btn=$('#toggle');
+        function setEditing(on){var was=editing;editing=on;document.body.classList.toggle('editing',on);
             $$('[data-k]').forEach(function(el){el.contentEditable=on?'true':'false'});
-            if(on){nameEl.textContent=store.name||'Your Name'}else{store.name=nameEl.textContent.trim()||'Your Name';save();renderName()}
+            if(on){nameEl.textContent=store.name||defaultName}
+            else{if(was){store.name=nameEl.textContent.trim()||defaultName;save()}renderName()}
             $$('.slot input').forEach(function(i){i.style.display=on?'':'none'});
             btn.textContent=on?'Done':'Edit page'}
         btn.onclick=function(){setEditing(!editing)};setEditing(false);
