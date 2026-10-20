@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>My Personal Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg:#f4f1ff;--ink:#1a1240;--muted:#5d5683;--surface:#fff;--a:#ff4d78;--b:#3b5bff;--line:#d9d2f5;
+            box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+        @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#130f2e;--ink:#f1edff;--muted:#a79fd0;--surface:#1d1842;--a:#ff7a9c;--b:#7f97ff;--line:#322b66}}
+        :root[data-theme="dark"]{--bg:#130f2e;--ink:#f1edff;--muted:#a79fd0;--surface:#1d1842;--a:#ff7a9c;--b:#7f97ff;--line:#322b66}
+        html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+        *{box-sizing:border-box}
+        body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.125rem;line-height:1.6;overflow-x:hidden}
+        #glow{position:fixed;left:0;top:0;width:46vmax;height:46vmax;margin:-23vmax 0 0 -23vmax;border-radius:50%;pointer-events:none;z-index:0;
+            background:radial-gradient(circle at 35% 35%,var(--b),transparent 60%),radial-gradient(circle at 70% 70%,var(--a),transparent 60%);opacity:.28;filter:blur(40px)}
+        #progress{position:fixed;top:0;left:0;height:4px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--b),var(--a));z-index:30}
+        main{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:clamp(1.25rem,5vw,3rem)}
+        .hero{min-height:88vh;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:2rem;align-items:center}
+        h1{margin:0;font-weight:800;font-size:clamp(3rem,11vw,7.5rem);line-height:.95;letter-spacing:-.03em;word-break:break-word}
+        h1 .l{display:inline-block;font-variation-settings:"wght" 300,"wdth" 80;transition:font-variation-settings .12s linear;white-space:pre}
+        .tagline{margin:1.25rem 0 0;font-size:1.35rem;color:var(--muted);max-width:30ch}
+        .cta{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:2rem}
+        .btn{font:inherit;font-weight:600;border:0;border-radius:999px;padding:.8rem 1.5rem;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .2s}
+        .btn.main{background:var(--ink);color:var(--bg)}
+        .btn.alt{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+        .btn:hover{transform:translateY(-3px) rotate(-1deg)}
+        .portrait{aspect-ratio:4/5;border-radius:58% 42% 55% 45%/50% 55% 45% 50%;transition:border-radius .8s ease,transform .3s ease;transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+        .portrait:hover{border-radius:42% 58% 45% 55%/55% 45% 55% 45%}
+        .slot{position:relative;overflow:hidden;display:grid;place-items:center;text-align:center;padding:1rem;color:var(--muted);background:var(--surface);box-shadow:inset 0 0 0 2px var(--line)}
+        .slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .slot.filled{box-shadow:none;cursor:zoom-in}
+        .slot input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+        section{padding:5rem 0 2rem}
+        h2{font-size:clamp(2rem,6vw,3.5rem);font-weight:700;letter-spacing:-.02em;margin:0 0 1.5rem;line-height:1.05}
+        .about p{font-size:clamp(1.3rem,3.2vw,2rem);line-height:1.35;max-width:32ch;margin:0 0 1.25rem;font-weight:400}
+        .about p+p{color:var(--muted)}
+        .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+        .reveal.in{opacity:1;transform:none}
+        .gallery{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(150px,22vw);gap:.9rem}
+        .gallery .slot{border-radius:1.25rem;transition:transform .25s,box-shadow .25s;transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+        .gallery .slot:nth-child(1){grid-row:span 2}.gallery .slot:nth-child(4){grid-column:span 2}.gallery .slot:nth-child(5){grid-row:span 2}
+        .gallery .slot.filled:hover{box-shadow:0 20px 40px -15px rgba(26,18,64,.5)}
+        .contact{margin:4rem 0;padding:clamp(1.5rem,5vw,3.5rem);border-radius:2rem;background:linear-gradient(135deg,var(--b),var(--a));color:#fff}
+        .contact h2{margin-bottom:.5rem}
+        .number{display:block;font-weight:800;font-size:clamp(2rem,8vw,4.5rem);letter-spacing:-.02em;color:#fff;text-decoration:none;word-break:break-word;margin:.5rem 0 1.5rem}
+        .contact .btn.main{background:#fff;color:#1a1240}.contact .btn.alt{color:#fff;box-shadow:inset 0 0 0 2px #fff}
+        #lb{position:fixed;inset:0;z-index:40;background:rgba(10,6,30,.92);display:none;place-items:center;padding:1rem}
+        #lb.open{display:grid}
+        #lb img{max-width:100%;max-height:82vh;border-radius:1rem}
+        #lb button{position:absolute;font:inherit;font-size:1.5rem;background:rgba(255,255,255,.15);color:#fff;border:0;width:3rem;height:3rem;border-radius:50%;cursor:pointer}
+        #lb .x{top:max(1rem,env(safe-area-inset-top,0px));right:1rem}#lb .p{left:1rem}#lb .n{right:1rem}
+        .bar{position:fixed;right:max(1rem,env(safe-area-inset-right,0px));bottom:max(1rem,env(safe-area-inset-bottom,0px));display:flex;gap:.5rem;z-index:20}
+        .bar button{font:inherit;font-weight:600;background:var(--ink);color:var(--bg);border:0;border-radius:999px;padding:.65rem 1.1rem;cursor:pointer}
+        body.editing [contenteditable]{outline:2px dashed var(--a);outline-offset:4px;border-radius:4px}
+        .hint{display:none;color:var(--muted);font-size:.95rem}body.editing .hint{display:block}
+        a:focus-visible,button:focus-visible,input:focus-visible+*,[contenteditable]:focus-visible{outline:3px solid var(--a);outline-offset:3px}
+        @media (max-width:700px){.hero{grid-template-columns:1fr;min-height:auto;padding-top:2rem}.portrait{max-width:260px}.gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(130px,40vw)}.gallery .slot:nth-child(n){grid-column:auto;grid-row:auto}}
+        @media (prefers-reduced-motion: reduce){#glow{display:none}.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+    </style>
+</head>
+<body>
+<div id="progress"></div><div id="glow"></div>
+<main>
+    <header class="hero">
+        <div>
+            <h1 id="name" data-k="name" aria-label="Your Name">Your Name</h1>
+            <p class="tagline" data-k="tag">Your title or a short line about you</p>
+            <div class="cta"><a class="btn main" href="#contact">Get in touch</a><a class="btn alt" href="#photos">See my photos</a></div>
+            <p class="hint">Edit mode is on: tap text to change it, tap a photo box to add a photo. Saved in this browser only.</p>
+        </div>
+        <div class="portrait slot" data-photo="portrait">Add your portrait<input type="file" accept="image/*" aria-label="Add portrait photo"></div>
+    </header>
+
+    <section class="about" id="about">
+        <h2 class="reveal">About me</h2>
+        <p class="reveal" data-k="about1">Write a few sentences about who you are, where you are from, and what you do.</p>
+        <p class="reveal" data-k="about2">Add what you enjoy, what you are working on, or anything visitors should know.</p>
+    </section>
+
+    <section id="photos">
+        <h2 class="reveal">My photos</h2>
+        <div class="gallery reveal" id="gallery"></div>
+    </section>
+
+    <section class="contact reveal" id="contact">
+        <h2>Call me</h2>
+        <a class="number" id="phone" data-k="phone" href="tel:+630000000000">+63 000 000 0000</a>
+        <div class="cta" style="margin:0"><a class="btn main" id="call" href="tel:+630000000000">Call now</a><button class="btn alt" id="copy" type="button">Copy number</button></div>
+    </section>
+</main>
+
+<div id="lb" role="dialog" aria-label="Photo viewer"><button class="x" aria-label="Close">×</button><button class="p" aria-label="Previous photo">‹</button><img alt=""><button class="n" aria-label="Next photo">›</button></div>
+<div class="bar"><button id="theme" type="button">Dark mode</button><button id="toggle" type="button">Edit page</button></div>
+
+<script>
+    (function(){
+        var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var store = {}; try{store=JSON.parse(localStorage.getItem('profile2')||'{}')}catch(e){}
+        function save(){try{localStorage.setItem('profile2',JSON.stringify(store))}catch(e){}}
+        var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+
+        var gal=$('#gallery');
+        for(var i=1;i<=6;i++){var d=document.createElement('div');d.className='slot';d.dataset.photo='photo'+i;d.innerHTML='Add photo '+i+'<input type="file" accept="image/*" aria-label="Add photo '+i+'">';gal.appendChild(d)}
+
+        // Name: letters react to pointer
+        var nameEl=$('#name'), letters=[];
+        function renderName(){
+            var t=store.name||'Your Name'; nameEl.textContent=''; letters=[];
+            nameEl.setAttribute('aria-label',t);
+            t.split('').forEach(function(c){var s=document.createElement('span');s.className='l';s.setAttribute('aria-hidden','true');s.textContent=c;nameEl.appendChild(s);letters.push(s)});
+        }
+        function wave(x,y){
+            letters.forEach(function(s){var r=s.getBoundingClientRect(),dx=x-(r.left+r.width/2),dy=y-(r.top+r.height/2),f=Math.max(0,1-Math.hypot(dx,dy)/220);
+                s.style.fontVariationSettings='"wght" '+Math.round(300+500*f)+',"wdth" '+Math.round(80+20*f)});
+        }
+        function relax(){letters.forEach(function(s){s.style.fontVariationSettings=''})}
+
+        // Text + phone
+        function setPhone(v){$('#phone').href=$('#call').href='tel:'+v.replace(/[^+\d]/g,'')}
+        $$('[data-k]').forEach(function(el){var k=el.dataset.k;if(k==='name')return;
+            if(store[k]){el.textContent=store[k];if(k==='phone')setPhone(store[k])}
+            el.addEventListener('input',function(){store[k]=el.textContent;if(k==='phone')setPhone(el.textContent);save()})});
+        nameEl.addEventListener('input',function(){store.name=nameEl.textContent;save()});
+        renderName();
+
+        // Photos
+        function show(slot,src){var im=slot.querySelector('img');if(!im){im=document.createElement('img');im.alt='';slot.appendChild(im)}im.src=src;slot.classList.add('filled')}
+        $$('.slot').forEach(function(slot){var key=slot.dataset.photo;if(store[key])show(slot,store[key]);
+            slot.querySelector('input').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();
+                r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);var u=c.toDataURL('image/jpeg',.82);show(slot,u);store[key]=u;save()};im.src=r.result};r.readAsDataURL(f)});
+            if(!reduce)slot.addEventListener('pointermove',function(e){if(e.pointerType==='touch')return;var b=slot.getBoundingClientRect();slot.style.setProperty('--ry',((e.clientX-b.left)/b.width-.5)*14+'deg');slot.style.setProperty('--rx',(.5-(e.clientY-b.top)/b.height)*14+'deg')});
+            slot.addEventListener('pointerleave',function(){slot.style.setProperty('--rx','0deg');slot.style.setProperty('--ry','0deg')});
+        });
+
+        // Lightbox
+        var lb=$('#lb'),lbImg=lb.querySelector('img'),idx=0;
+        function filled(){return $$('.gallery .slot.filled')}
+        function open(i){var f=filled();if(!f.length)return;idx=(i+f.length)%f.length;lbImg.src=f[idx].querySelector('img').src;lb.classList.add('open')}
+        gal.addEventListener('click',function(e){if(editing)return;var s=e.target.closest('.slot.filled');if(s)open(filled().indexOf(s))});
+        lb.querySelector('.x').onclick=function(){lb.classList.remove('open')};
+        lb.querySelector('.p').onclick=function(){open(idx-1)};lb.querySelector('.n').onclick=function(){open(idx+1)};
+        lb.addEventListener('click',function(e){if(e.target===lb)lb.classList.remove('open')});
+        addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')lb.classList.remove('open');if(e.key==='ArrowLeft')open(idx-1);if(e.key==='ArrowRight')open(idx+1)});
+
+        // Pointer glow + letters
+        var gx=innerWidth/2,gy=innerHeight/3,tx=gx,ty=gy,glow=$('#glow');
+        addEventListener('pointermove',function(e){tx=e.clientX;ty=e.clientY;if(!reduce&&!editing)wave(e.clientX,e.clientY)});
+        nameEl.parentElement.addEventListener('pointerleave',relax);
+        (function loop(){gx+=(tx-gx)*.06;gy+=(ty-gy)*.06;glow.style.transform='translate('+gx+'px,'+gy+'px)';requestAnimationFrame(loop)})();
+
+        // Scroll progress + reveal
+        var prog=$('#progress');
+        function onScroll(){var h=document.documentElement.scrollHeight-innerHeight;prog.style.transform='scaleX('+(h>0?scrollY/h:0)+')'}
+        addEventListener('scroll',onScroll,{passive:true});onScroll();
+        var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.15});
+        $$('.reveal').forEach(function(el){io.observe(el)});
+
+        // Copy number
+        var copy=$('#copy');
+        copy.onclick=function(){var t=$('#phone').textContent.trim();
+            function done(ok){copy.textContent=ok?'Copied':'Press and hold to copy';setTimeout(function(){copy.textContent='Copy number'},1800)}
+            try{navigator.clipboard.writeText(t).then(function(){done(true)},function(){done(false)})}catch(e){done(false)}};
+
+        // Theme
+        var root=document.documentElement,tb=$('#theme');
+        function dark(){var t=root.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+        function labelTheme(){tb.textContent=dark()?'Light mode':'Dark mode'}
+        tb.onclick=function(){root.setAttribute('data-theme',dark()?'light':'dark');labelTheme()};labelTheme();
+
+        // Edit mode
+        var editing=false,btn=$('#toggle');
+        function setEditing(on){editing=on;document.body.classList.toggle('editing',on);
+            $$('[data-k]').forEach(function(el){el.contentEditable=on?'true':'false'});
+            if(on){nameEl.textContent=store.name||'Your Name'}else{store.name=nameEl.textContent.trim()||'Your Name';save();renderName()}
+            $$('.slot input').forEach(function(i){i.style.display=on?'':'none'});
+            btn.textContent=on?'Done':'Edit page'}
+        btn.onclick=function(){setEditing(!editing)};setEditing(false);
+        $$('a[data-k]').forEach(function(a){a.addEventListener('click',function(e){if(editing)e.preventDefault()})});
+    })();
+</script>
+</body>
+</html>
