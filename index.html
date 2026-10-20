@@ -43,10 +43,16 @@
         .gallery .slot{border-radius:1.25rem;transition:transform .25s,box-shadow .25s;transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
         .gallery .slot:nth-child(1){grid-row:span 2}.gallery .slot:nth-child(4){grid-column:span 2}.gallery .slot:nth-child(5){grid-row:span 2}
         .gallery .slot.filled:hover{box-shadow:0 20px 40px -15px rgba(26,18,64,.5)}
-        .contact{margin:4rem 0;padding:clamp(1.5rem,5vw,3.5rem);border-radius:2rem;background:linear-gradient(135deg,var(--b),var(--a));color:#fff}
-        .contact h2{margin-bottom:.5rem}
-        .number{display:block;font-weight:800;font-size:clamp(2rem,8vw,4.5rem);letter-spacing:-.02em;color:#fff;text-decoration:none;word-break:break-word;margin:.5rem 0 1.5rem}
-        .contact .btn.main{background:#fff;color:#1a1240}.contact .btn.alt{color:#fff;box-shadow:inset 0 0 0 2px #fff}
+        .socials{margin:4rem 0;padding:clamp(1.5rem,5vw,3.5rem);border-radius:2rem;background:linear-gradient(135deg,var(--b),var(--a));color:#fff}
+        .socials h2{margin-bottom:1.5rem}
+        .links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.9rem}
+        .link{display:grid;grid-template-columns:1fr auto;align-items:center;gap:.1rem .75rem;padding:1.1rem 1.3rem;border-radius:1.25rem;background:rgba(255,255,255,.16);color:#fff;text-decoration:none;transition:transform .25s,background .25s}
+        .link:hover{transform:translateY(-4px) rotate(-1deg);background:rgba(255,255,255,.3)}
+        .link:focus-visible{outline-color:#fff}
+        .link .n{font-weight:800;font-size:1.4rem;line-height:1.2}
+        .link .h{grid-column:1;opacity:.85;font-size:.95rem;overflow-wrap:anywhere}
+        .link .arrow{grid-row:1/3;grid-column:2;font-size:1.6rem;transition:transform .25s}
+        .link:hover .arrow{transform:translate(3px,-3px)}
         #lb{position:fixed;inset:0;z-index:40;background:rgba(10,6,30,.92);display:none;place-items:center;padding:1rem}
         #lb.open{display:grid}
         #lb img{max-width:100%;max-height:82vh;border-radius:1rem}
@@ -68,7 +74,7 @@
         <div>
             <h1 id="name" data-k="name" aria-label="Roxanne Lucero Esnec">Roxanne Lucero Esnec</h1>
             <p class="tagline" data-k="tag">Building my own path and owning every step.</p>
-            <div class="cta"><a class="btn main" href="#contact">Get in touch</a><a class="btn alt" href="#photos">See my photos</a></div>
+            <div class="cta"><a class="btn main" href="#socials">Find me online</a><a class="btn alt" href="#photos">See my photos</a></div>
             <p class="hint">Edit mode is on: tap text to change it, tap a photo box to add a photo. Saved in this browser only.</p>
         </div>
         <div class="portrait slot" data-photo="portrait">Add your portrait<input type="file" accept="image/*" aria-label="Add portrait photo"></div>
@@ -85,10 +91,9 @@
         <div class="gallery reveal" id="gallery"></div>
     </section>
 
-    <section class="contact reveal" id="contact">
-        <h2>Call me</h2>
-        <a class="number" id="phone" data-k="phone" href="tel:+630000000000">+63 000 000 0000</a>
-        <div class="cta" style="margin:0"><a class="btn main" id="call" href="tel:+630000000000">Call now</a><button class="btn alt" id="copy" type="button">Copy number</button></div>
+    <section class="socials reveal" id="socials">
+        <h2>Find me online</h2>
+        <div class="links" id="links"></div>
     </section>
 </main>
 
@@ -115,6 +120,18 @@
         };
         var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
 
+        // PUT YOUR SOCIAL LINKS HERE: change name, handle and url. Delete a line to remove it, copy a line to add one.
+        var SOCIALS=[
+            {name:'Facebook', handle:'@yourname', url:'https://facebook.com/yourname'},
+            {name:'Instagram',handle:'@yourname', url:'https://instagram.com/yourname'},
+            {name:'TikTok',   handle:'@yourname', url:'https://tiktok.com/@yourname'},
+            {name:'X',        handle:'@yourname', url:'https://x.com/yourname'}
+        ];
+        var links=$('#links');
+        SOCIALS.forEach(function(x){var a=document.createElement('a');a.className='link';a.href=x.url;a.target='_blank';a.rel='noopener noreferrer';
+            a.innerHTML='<span class="n"></span><span class="h"></span><span class="arrow" aria-hidden="true">\u2197</span>';
+            a.querySelector('.n').textContent=x.name;a.querySelector('.h').textContent=x.handle;links.appendChild(a)});
+
         var gal=$('#gallery');
         for(var i=1;i<=6;i++){var d=document.createElement('div');d.className='slot';d.dataset.photo='photo'+i;d.innerHTML='Add photo '+i+'<input type="file" accept="image/*" aria-label="Add photo '+i+'">';gal.appendChild(d)}
 
@@ -132,10 +149,9 @@
         function relax(){letters.forEach(function(s){s.style.fontVariationSettings=''})}
 
         // Text + phone
-        function setPhone(v){$('#phone').href=$('#call').href='tel:'+v.replace(/[^+\d]/g,'')}
         $$('[data-k]').forEach(function(el){var k=el.dataset.k;if(k==='name')return;
-            if(store[k]){el.textContent=store[k];if(k==='phone')setPhone(store[k])}
-            el.addEventListener('input',function(){store[k]=el.textContent;if(k==='phone')setPhone(el.textContent);save()})});
+            if(store[k]){el.textContent=store[k];}
+            el.addEventListener('input',function(){store[k]=el.textContent;save()})});
         nameEl.addEventListener('input',function(){store.name=nameEl.textContent;save()});
         renderName();
 
@@ -171,12 +187,6 @@
         var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.15});
         $$('.reveal').forEach(function(el){io.observe(el)});
 
-        // Copy number
-        var copy=$('#copy');
-        copy.onclick=function(){var t=$('#phone').textContent.trim();
-            function done(ok){copy.textContent=ok?'Copied':'Press and hold to copy';setTimeout(function(){copy.textContent='Copy number'},1800)}
-            try{navigator.clipboard.writeText(t).then(function(){done(true)},function(){done(false)})}catch(e){done(false)}};
-
         // Theme
         var root=document.documentElement,tb=$('#theme');
         function dark(){var t=root.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
@@ -192,7 +202,6 @@
             $$('.slot input').forEach(function(i){i.style.display=on?'':'none'});
             btn.textContent=on?'Done':'Edit page'}
         btn.onclick=function(){setEditing(!editing)};setEditing(false);
-        $$('a[data-k]').forEach(function(a){a.addEventListener('click',function(e){if(editing)e.preventDefault()})});
     })();
 </script>
 </body>
