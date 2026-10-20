@@ -100,6 +100,18 @@
         var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
         var store = {}; try{store=JSON.parse(localStorage.getItem('profile2')||'{}')}catch(e){}
         function save(){try{localStorage.setItem('profile2',JSON.stringify(store))}catch(e){}}
+
+        // PUT YOUR PHOTOS HERE: change the file names to match your pictures.
+        // Delete a line if you don't have that photo (the box stays as an upload slot).
+        var PHOTOS = {
+            portrait: 'photos/me.jpg',     // big picture at the top
+            photo1:   'photos/photo1.jpg', // gallery photos
+            photo2:   'photos/photo2.jpg',
+            photo3:   'photos/photo3.jpg',
+            photo4:   'photos/photo4.jpg',
+            photo5:   'photos/photo5.jpg',
+            photo6:   'photos/photo6.jpg'
+        };
         var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
 
         var gal=$('#gallery');
@@ -128,7 +140,7 @@
 
         // Photos
         function show(slot,src){var im=slot.querySelector('img');if(!im){im=document.createElement('img');im.alt='';slot.appendChild(im)}im.src=src;slot.classList.add('filled')}
-        $$('.slot').forEach(function(slot){var key=slot.dataset.photo;if(store[key])show(slot,store[key]);
+        $$('.slot').forEach(function(slot){var key=slot.dataset.photo;var src=PHOTOS[key]||store[key];if(src)show(slot,src);
             slot.querySelector('input').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();
                 r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);var u=c.toDataURL('image/jpeg',.82);show(slot,u);store[key]=u;save()};im.src=r.result};r.readAsDataURL(f)});
             if(!reduce)slot.addEventListener('pointermove',function(e){if(e.pointerType==='touch')return;var b=slot.getBoundingClientRect();slot.style.setProperty('--ry',((e.clientX-b.left)/b.width-.5)*14+'deg');slot.style.setProperty('--rx',(.5-(e.clientY-b.top)/b.height)*14+'deg')});
